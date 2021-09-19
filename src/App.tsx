@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import Header from './components/Header';
+import Home from './pages/Home';
+import Page404 from './pages/Page404';
+import UserPage from './pages/UserPage';
 
-function App() {
+const App: React.VFC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Header />
+      <Switch>
+        <Route
+          path="/data"
+          render={({ match: { url } }) => (
+            <Switch>
+              <Route exact path={url} render={() => <Redirect to="/" />} />
+              <Route path={`${url}/:userId`} component={UserPage} />
+              <Route path={`${url}/*`}>
+                <Page404 />
+              </Route>
+            </Switch>
+          )}
+        />
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route path="*">
+          <Page404 />
+        </Route>
+      </Switch>
+      <Header />
+    </BrowserRouter>
   );
-}
+};
 
 export default App;
