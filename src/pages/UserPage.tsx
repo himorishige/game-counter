@@ -1,6 +1,8 @@
+import React from 'react';
 import { useGetCounterByNameQuery } from '../services/counter';
 import {
   Box,
+  Heading,
   Table,
   Thead,
   Tbody,
@@ -8,7 +10,6 @@ import {
   Th,
   Td,
   Spinner,
-  Tfoot,
   TableCaption,
 } from '@chakra-ui/react';
 import moment from 'moment';
@@ -46,7 +47,7 @@ const UserPage: React.VFC<Props> = (props) => {
     const datetime1 = new Date(startTime);
     const datetime2 = new Date(endTime);
     const termDay = Number(datetime2) - Number(datetime1);
-    return computeDuration(termDay);
+    return termDay;
   };
 
   const timingCharacter = (str: string) => {
@@ -65,42 +66,54 @@ const UserPage: React.VFC<Props> = (props) => {
 
   return (
     <Box p={4} minHeight="320px">
-      {isFetching ? (
+      <Heading mb={4}>
+        合計時間：
+        {computeDuration(
+          data
+            .map((item, index, data) => {
+              if (data[index + 1]?.flag === '1') {
+                return echoTime(item.timestamp, data[index + 1].timestamp);
+              }
+              return 0;
+            })
+            .reduce((acc, value) => acc + value),
+        )}
+      </Heading>
+      {isFetching && (
         <Box alignItems="center" justifyContent="center" textAlign="center">
           <Spinner thickness="4px" speed="0.65s" emptyColor="gray.200" color="blue.500" size="xl" />
         </Box>
-      ) : (
-        <Table variant="simple">
-          <TableCaption>更新日時：{now}</TableCaption>
-          <Thead>
-            <Tr>
-              <Th>ID</Th>
-              <Th>UserId</Th>
-              <Th>Timestamp</Th>
-              <Th></Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {data.map((item, index, data) => (
-              <>
-                <Tr key={item.uid}>
-                  <Td>{index + 1}</Td>
-                  <Td>{item.userId}</Td>
-                  <Td>{item.timestamp}</Td>
-                  <Td>{timingCharacter(item.flag)}</Td>
-                </Tr>
-                {data[index + 1]?.flag === '1' && (
-                  <Tr>
-                    <Td colSpan={4}>
-                      経過時間 {echoTime(item.timestamp, data[index + 1].timestamp)}
-                    </Td>
-                  </Tr>
-                )}
-              </>
-            ))}
-          </Tbody>
-        </Table>
       )}
+      <Table variant="simple" size="sm">
+        <TableCaption>更新日時：{now}</TableCaption>
+        <Thead>
+          <Tr>
+            <Th>ID</Th>
+            <Th>UserId</Th>
+            <Th>Timestamp</Th>
+            <Th></Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {data.map((item, index, data) => (
+            <React.Fragment key={item.uid}>
+              <Tr>
+                <Td>{index + 1}</Td>
+                <Td>{item.userId}</Td>
+                <Td>{item.timestamp}</Td>
+                <Td>{timingCharacter(item.flag)}</Td>
+              </Tr>
+              {data[index + 1]?.flag === '1' && (
+                <Tr>
+                  <Td colSpan={4}>
+                    経過時間 {computeDuration(echoTime(item.timestamp, data[index + 1].timestamp))}
+                  </Td>
+                </Tr>
+              )}
+            </React.Fragment>
+          ))}
+        </Tbody>
+      </Table>
     </Box>
   );
 };
