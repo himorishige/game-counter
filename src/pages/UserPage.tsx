@@ -76,7 +76,7 @@ const UserPage: React.VFC<Props> = (props) => {
               }
               return 0;
             })
-            .reduce((acc, value) => acc + value),
+            .reduce((acc, value) => acc + value, 0),
         )}
       </Heading>
       {isFetching && (
