@@ -13,7 +13,7 @@ import {
   TableCaption,
 } from '@chakra-ui/react';
 import moment from 'moment';
-import { QueryParams } from '../types';
+import { CounterList, QueryParams } from '../types';
 
 type Props = {
   match: {
@@ -64,11 +64,25 @@ const UserPage: React.VFC<Props> = (props) => {
   if (isLoading) return <div>Loading...</div>;
   if (!data) return <div>Missing data!</div>;
 
+  const totalTime = (logData: CounterList[]) => {
+    return computeDuration(
+      logData
+        .map((item, index, org) => {
+          if (org[index + 1]?.flag === '1') {
+            return echoTime(item.timestamp, org[index + 1].timestamp);
+          }
+          return 0;
+        })
+        .reduce((acc, value) => acc + value, 0),
+    );
+  };
+
   return (
     <Box p={4} minHeight="320px">
       <Heading mb={4}>
         合計時間：
-        {computeDuration(
+        {totalTime(data)}
+        {/* {computeDuration(
           data
             .map((item, index, data) => {
               if (data[index + 1]?.flag === '1') {
@@ -77,7 +91,7 @@ const UserPage: React.VFC<Props> = (props) => {
               return 0;
             })
             .reduce((acc, value) => acc + value, 0),
-        )}
+        )} */}
       </Heading>
       {isFetching && (
         <Box alignItems="center" justifyContent="center" textAlign="center">
