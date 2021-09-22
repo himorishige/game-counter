@@ -31,7 +31,7 @@ const Home: React.VFC = () => {
 
   return (
     <Box p={4}>
-      <Box p={4}>
+      <Box>
         <Heading size="md" mb={4}>
           むつみ
         </Heading>
@@ -52,7 +52,7 @@ const Home: React.VFC = () => {
           </Tbody>
         </Table>
       </Box>
-      <Box p={4}>
+      <Box mt={4}>
         <Heading size="md" mb={4}>
           けい
         </Heading>
