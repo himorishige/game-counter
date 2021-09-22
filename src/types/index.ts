@@ -5,6 +5,12 @@ export type CounterList = {
   flag: string;
 };
 
+export type LogList = {
+  userId: string;
+  timestamp: string;
+  totalTime: string;
+};
+
 export type QueryParams = {
   name: string;
   timestamp: string;
