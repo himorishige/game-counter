@@ -7,6 +7,9 @@ const Header: React.VFC = () => {
 
   return (
     <Stack direction="row" p={4}>
+      <Button colorScheme="teal" onClick={() => history.push('/')}>
+        Home
+      </Button>
       <Button colorScheme="blue" onClick={() => history.push('/data/むつみ')}>
         むつみ
       </Button>
