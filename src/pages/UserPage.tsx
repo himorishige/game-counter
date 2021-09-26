@@ -11,9 +11,11 @@ import {
   Td,
   Spinner,
   TableCaption,
+  Select,
 } from '@chakra-ui/react';
 import moment from 'moment';
 import { CounterList, QueryParams } from '../types';
+import { useLocation, useHistory } from 'react-router-dom';
 
 type Props = {
   match: {
@@ -24,15 +26,31 @@ type Props = {
 };
 
 const UserPage: React.VFC<Props> = (props) => {
-  const today = moment().format('YYYY-MM-DDT00:00:00');
+  const search = useLocation().search;
+  const query = new URLSearchParams(search);
+
+  const history = useHistory();
+
+  let today = '';
+  if (query.get('date')) {
+    today = `${query.get('date')}T00:00:00`;
+  } else {
+    today = moment().format('YYYY-MM-DDT00:00:00');
+  }
+  const nextDay = moment(today).add(1, 'days').format('YYYY-MM-DDT00:00:00');
   const now = moment().format('YYYY-MM-DDTHH:mm:ss');
   const params: QueryParams = {
     name: props.match.params.userId,
     timestamp: today,
+    endtimestamp: nextDay,
   };
   const { data, isLoading, isFetching } = useGetCounterByNameQuery(params, {
     pollingInterval: 30000,
   });
+
+  const changeHandler = (value: string) => {
+    history.push(`/data/${props.match.params.userId}?date=${value}`);
+  };
 
   const computeDuration = (ms: number) => {
     const h = String(Math.floor(ms / 3600000) + 100).substring(1);
@@ -61,8 +79,8 @@ const UserPage: React.VFC<Props> = (props) => {
     return '未設定';
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (!data) return <div>Missing data!</div>;
+  if (isLoading) return <Box p={4}>Loading...</Box>;
+  if (!data) return <Box p={4}>Missing data!</Box>;
 
   const totalTime = (logData: CounterList[]) => {
     return computeDuration(
@@ -79,6 +97,17 @@ const UserPage: React.VFC<Props> = (props) => {
 
   return (
     <Box p={4} minHeight="320px">
+      <Box pb={4}>
+        <Select name="date" onChange={(event) => changeHandler(event.target.value)}>
+          <option>select date</option>
+          <option value={moment().format('YYYY-MM-DD')}>today</option>
+          {[...Array(6)].map((_, i) => (
+            <option key={i} value={moment().add(`-${i}`, 'days').format('YYYY-MM-DD')}>
+              {moment().add(`-${i}`, 'days').format('YYYY-MM-DD')}
+            </option>
+          ))}
+        </Select>
+      </Box>
       <Heading mb={4}>
         合計時間：
         {totalTime(data)}

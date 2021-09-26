@@ -1,19 +1,19 @@
 import React from 'react';
 import { useGetTotalTimeByNameQuery } from '../services/counter';
 import moment from 'moment';
-import { QueryParams } from '../types';
+import { QueryParams, QueryParams2 } from '../types';
 import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 
 const Home: React.VFC = () => {
   const lastWeek = moment().add(-7, 'days').format('YYYY-MM-DDT00:00:00');
 
-  const params: QueryParams = {
+  const params: QueryParams2 = {
     name: 'むつみ',
     timestamp: lastWeek,
   };
   const { data, isLoading } = useGetTotalTimeByNameQuery(params, {});
 
-  const params2: QueryParams = {
+  const params2: QueryParams2 = {
     name: 'けい',
     timestamp: lastWeek,
   };
@@ -24,10 +24,10 @@ const Home: React.VFC = () => {
     return datetime.toLocaleDateString();
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isLoading2) return <div>Loading...</div>;
-  if (!data) return <div>Missing data!</div>;
-  if (!data2) return <div>Missing data!</div>;
+  if (isLoading) return <Box p={4}>Loading...</Box>;
+  if (isLoading2) return <Box p={4}>Loading...</Box>;
+  if (!data) return <Box p={4}>Missing data!</Box>;
+  if (!data2) return <Box p={4}>Missing data!</Box>;
 
   return (
     <Box p={4}>

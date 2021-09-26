@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { CounterList, LogList, QueryParams } from '../types';
+import { CounterList, LogList, QueryParams, QueryParams2 } from '../types';
 
 const API_URL = process.env.REACT_APP_API_URL!;
 const API_KEY = process.env.REACT_APP_API_KEY!;
@@ -15,9 +15,10 @@ export const counterApi = createApi({
   }),
   endpoints: (builder) => ({
     getCounterByName: builder.query<CounterList[], QueryParams>({
-      query: (params) => `counter?userId=${params.name}&timestamp=${params.timestamp}`,
+      query: (params) =>
+        `counter?userId=${params.name}&timestamp=${params.timestamp}&endtimestamp=${params.endtimestamp}`,
     }),
-    getTotalTimeByName: builder.query<LogList[], QueryParams>({
+    getTotalTimeByName: builder.query<LogList[], QueryParams2>({
       query: (params) => `log?userId=${params.name}&timestamp=${params.timestamp}`,
     }),
   }),

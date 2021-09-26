@@ -14,4 +14,10 @@ export type LogList = {
 export type QueryParams = {
   name: string;
   timestamp: string;
+  endtimestamp: string;
+};
+
+export type QueryParams2 = {
+  name: string;
+  timestamp: string;
 };
