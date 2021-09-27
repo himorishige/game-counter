@@ -100,7 +100,6 @@ const UserPage: React.VFC<Props> = (props) => {
       <Box pb={4}>
         <Select name="date" onChange={(event) => changeHandler(event.target.value)}>
           <option>select date</option>
-          <option value={moment().format('YYYY-MM-DD')}>today</option>
           {[...Array(6)].map((_, i) => (
             <option key={i} value={moment().add(`-${i}`, 'days').format('YYYY-MM-DD')}>
               {moment().add(`-${i}`, 'days').format('YYYY-MM-DD')}

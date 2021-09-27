@@ -1,7 +1,7 @@
 import React from 'react';
 import { useGetTotalTimeByNameQuery } from '../services/counter';
 import moment from 'moment';
-import { QueryParams, QueryParams2 } from '../types';
+import { QueryParams2 } from '../types';
 import { Box, Heading, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 
 const Home: React.VFC = () => {
